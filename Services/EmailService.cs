@@ -1,6 +1,7 @@
-using System.Net;
-using System.Net.Mail;
 using emailAPI.Models;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
 
 namespace emailAPI.Services
 {
@@ -17,26 +18,31 @@ namespace emailAPI.Services
 
         public async Task SendEmail(ContactForm form)
         {
-            using var client = new SmtpClient(_smtpServer, _smtpPort)
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("My Site", _email));
+            message.To.Add(new MailboxAddress("Me", _email));
+            message.Subject = $"{form.Name} wants to connect!!";
+            message.Body = new TextPart("plain")
             {
-                Credentials = new NetworkCredential(_email, _password),
-                EnableSsl = true
+                Text = $"Name: {form.Name}\nEmail: {form.Email}\nMessage: {form.Message}"
             };
 
-            using var mailMessage = new MailMessage
-            {
-                From = new MailAddress(_email),
-                Subject = $"{form.Name} wants to connect!!",
-                Body = $"Name: {form.Name}\nEmail: {form.Email}\nMessage: {form.Message}",
-                IsBodyHtml = false
-            };
-            mailMessage.To.Add(_email);
-
+            using var client = new SmtpClient();
             try
             {
-                await client.SendMailAsync(mailMessage);
+                // Connect securely using SSL
+                await client.ConnectAsync(_smtpServer, _smtpPort, SecureSocketOptions.StartTls);
+
+                // Authenticate
+                await client.AuthenticateAsync(_email, _password);
+
+                // Send the email
+                await client.SendAsync(message);
+
+                // Disconnect cleanly
+                await client.DisconnectAsync(true);
             }
-            catch (SmtpException ex)
+            catch (Exception ex)
             {
                 throw new InvalidOperationException("Failed to send email.", ex);
             }
