@@ -2,9 +2,10 @@ using DotNetEnv;
 using emailAPI.Services;
 using emailAPI.Middleware;
 
+Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
 
-Env.Load();
 builder.Services.AddSingleton<EmailService>();
 
 builder.Services.AddControllers();
