@@ -15,8 +15,15 @@ namespace emailAPI.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            await _emailService.SendEmail(form);
-            return Ok(new { message = "Message sent successfully!" });
+            try
+            {
+                await _emailService.SendEmail(form);
+                return Ok(new { message = "Message sent successfully!" });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "Failed to send message." });
+            }
         }
     }
 }
