@@ -6,7 +6,7 @@ Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<EmailService>();
+builder.Services.AddSingleton<IEmailService, EmailService>();
 
 builder.Services.AddControllers();
 

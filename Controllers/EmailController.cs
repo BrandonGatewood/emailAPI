@@ -6,9 +6,9 @@ namespace emailAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EmailController(EmailService emailService) : ControllerBase
+    public class EmailController(IEmailService emailService) : ControllerBase
     {
-        private readonly EmailService _emailService = emailService;
+        private readonly IEmailService _emailService = emailService;
 
         [HttpPost]
         public async Task<IActionResult> SendMessage([FromBody] ContactForm form)

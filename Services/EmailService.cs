@@ -5,7 +5,7 @@ using MimeKit;
 
 namespace emailAPI.Services
 {
-    public class EmailService(IConfiguration config)
+    public class EmailService(IConfiguration config) : IEmailService
     {
         private readonly string _smtpServer= config["SMTP_SERVER"]
             ?? throw new InvalidOperationException("SMTP_SERVER is not set in environment variables.");
