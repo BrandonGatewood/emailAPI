@@ -4,24 +4,16 @@ using emailAPI.Models;
 
 namespace emailAPI.Services
 {
-    public class EmailService
+    public class EmailService(IConfiguration config)
     {
-        public readonly string _smtpServer;
-        public readonly int _smtpPort;
-        public readonly string _email;
-        public readonly string _password;
-
-        public EmailService()
-        {
-            _smtpServer = Environment.GetEnvironmentVariable("SMTP_SERVER")
-                ?? throw new InvalidOperationException("SMTP_SERVER is not set in environment variables.");
-            _smtpPort = int.Parse(Environment.GetEnvironmentVariable("SMTP_PORT")
-                ?? throw new InvalidOperationException("SMTP_PORT is not set in environment variables."));
-            _email = Environment.GetEnvironmentVariable("EMAIL")
-                ?? throw new InvalidOperationException("EMAIL is not set in environment variables.");
-            _password = Environment.GetEnvironmentVariable("PASSWORD")
-                ?? throw new InvalidOperationException("PASSWORD is not set in environment variables.");
-        }
+        private readonly string _smtpServer= config["SMTP_SERVER"]
+            ?? throw new InvalidOperationException("SMTP_SERVER is not set in environment variables.");
+        private readonly int _smtpPort = int.Parse(config["SMTP_PORT"]
+            ?? throw new InvalidOperationException("SMTP_PORT is not set in environment variables."));
+        private readonly string _email = config["EMAIL"]
+            ?? throw new InvalidOperationException("EMAIL is not set in environment variables.");
+        private readonly string _password = config["PASSWORD"]
+            ?? throw new InvalidOperationException("PASSWORD is not set in environment variables.");
 
         public async Task SendEmail(ContactForm form)
         {
@@ -31,7 +23,7 @@ namespace emailAPI.Services
                 EnableSsl = true
             };
 
-            var mailMessage = new MailMessage
+            using var mailMessage = new MailMessage
             {
                 From = new MailAddress(_email),
                 Subject = $"{form.Name} wants to connect!!",
@@ -40,7 +32,14 @@ namespace emailAPI.Services
             };
             mailMessage.To.Add(_email);
 
-            await client.SendMailAsync(mailMessage);
+            try
+            {
+                await client.SendMailAsync(mailMessage);
+            }
+            catch (SmtpException ex)
+            {
+                throw new InvalidOperationException("Failed to send email.", ex);
+            }
         }
     }
 }
