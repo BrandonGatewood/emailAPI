@@ -1,16 +1,16 @@
 # emailAPI
 A simple ASP.NET Core API for sending contact form emails with built-in rate limiting via Redis.
 
-## 🚀 Features
+## Features
 
-- ✅ Send emails using a service class (EmailService) with dependency injection.
-- ✅ Redis-based IP rate limiter to prevent spam.
-- ✅ Clean and configurable middleware architecture.
-- ✅ Environment-variable-based configuration for security.
+- Send emails using a service class (EmailService) with dependency injection.
+- Redis-based IP rate limiter to prevent spam.
+- Clean and configurable middleware architecture.
+- Environment-variable-based configuration for security.
 
 ---
 
-## 🧱 Tech Stack
+## Tech Stack
 | Layer        | Technology            |
 |--------------|------------------------|
 | Language     | C#                     |
@@ -19,7 +19,7 @@ A simple ASP.NET Core API for sending contact form emails with built-in rate lim
 
 ---
 
-## 📁 Architecture Overview
+## Architecture Overview
 
 ```bash
 Controllers/EmailController.cs # Receives requests and calls the service.
@@ -31,7 +31,7 @@ Extensions/RedisExtension.cs # Configures Redis connection using dependency inje
 
 ---
 
-## 🛠️ Getting Started
+## Getting Started
 
 ### 1. Clone the repository
 
