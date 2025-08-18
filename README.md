@@ -42,6 +42,7 @@ cd emailAPI
 
 ### 2. Configure environment
 Create a .env file in the root directory with the following:
+```env
 SMTP_SERVER=your_smtp_host
 SMTP_PORT=587
 EMAIL=your_email_username
@@ -52,6 +53,7 @@ REDIS_PORT=your_redis_port
 REDIS_PASSWORD=your_redis_password
 RATE_LIMIT=2
 WINDOW_SEC=60
+```
 
 ### 3. Run the application
 ```bash
